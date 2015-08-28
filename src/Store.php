@@ -1,5 +1,5 @@
 <?php
-    class Category
+    class Store
     {
         private $name;
         private $id;
@@ -40,18 +40,18 @@
         function delete()
         {
             $GLOBALS['DB']->exec("DELETE FROM categories WHERE id = {$this->getId()};");
-            $GLOBALS['DB']->exec("DELETE FROM categories_tasks WHERE category_id = {$this->getId()};");
+            $GLOBALS['DB']->exec("DELETE FROM categories_tasks WHERE store_id = {$this->getId()};");
         }
 
         static function getAll()
         {
             $returned_categories = $GLOBALS['DB']->query("SELECT * FROM categories;");
             $categories = array();
-            foreach($returned_categories as $category) {
-                $name = $category['name'];
-                $id = $category['id'];
-                $new_category = new Category($name, $id);
-                array_push($categories, $new_category);
+            foreach($returned_categories as $store) {
+                $name = $store['name'];
+                $id = $store['id'];
+                $new_store = new Store($name, $id);
+                array_push($categories, $new_store);
             }
             return $categories;
         }
@@ -63,25 +63,25 @@
 
         static function find($search_id)
         {
-            $found_category = null;
-            $categories = Category::getAll();
-            foreach($categories as $category) {
-                $category_id = $category->getId();
-                if ($category_id == $search_id) {
-                  $found_category = $category;
+            $found_store = null;
+            $categories = Store::getAll();
+            foreach($categories as $store) {
+                $store_id = $store->getId();
+                if ($store_id == $search_id) {
+                  $found_store = $store;
                 }
             }
-            return $found_category;
+            return $found_store;
         }
 
         function addTask($task)
         {
-            $GLOBALS['DB']->exec("INSERT INTO categories_tasks (category_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
+            $GLOBALS['DB']->exec("INSERT INTO categories_tasks (store_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
         }
 
         function getTasks()
         {
-           $query = $GLOBALS['DB']->query("SELECT task_id FROM categories_tasks WHERE category_id = {$this->getId()};");
+           $query = $GLOBALS['DB']->query("SELECT task_id FROM categories_tasks WHERE store_id = {$this->getId()};");
            $task_ids = $query->fetchAll(PDO::FETCH_ASSOC);
 
            $tasks = array();
