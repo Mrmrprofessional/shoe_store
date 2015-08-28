@@ -40,7 +40,7 @@
         function delete()
         {
             $GLOBALS['DB']->exec("DELETE FROM stores WHERE id = {$this->getId()};");
-            $GLOBALS['DB']->exec("DELETE FROM stores_tasks WHERE store_id = {$this->getId()};");
+            $GLOBALS['DB']->exec("DELETE FROM brands_stores WHERE store_id = {$this->getId()};");
         }
 
         static function getAll()
@@ -74,28 +74,26 @@
             return $found_store;
         }
 
-        function addTask($task)
+        function addBrand($brand)
         {
-            $GLOBALS['DB']->exec("INSERT INTO stores_tasks (store_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
+            $GLOBALS['DB']->exec("INSERT INTO brands_stores (store_id, brand_id) VALUES ({$this->getId()}, {$brand->getId()});");
         }
 
-        function getTasks()
+        function getBrands()
         {
-           $query = $GLOBALS['DB']->query("SELECT task_id FROM stores_tasks WHERE store_id = {$this->getId()};");
-           $task_ids = $query->fetchAll(PDO::FETCH_ASSOC);
+           $returned_brands = $GLOBALS['DB']->query("SELECT brands.* FROM stores
+                JOIN brands_stores ON (stores.id = brands_stores.store_id)
+                JOIN brands ON (brands_stores.brand_id = brands.id)
+                WHERE stores.id = {$this->getId()};");
 
-           $tasks = array();
-           foreach($task_ids as $id) {
-               $task_id = $id['task_id'];
-               $result = $GLOBALS['DB']->query("SELECT * FROM tasks WHERE id = {$task_id};");
-               $returned_task = $result->fetchAll(PDO::FETCH_ASSOC);
-               $description = $returned_task[0]['description'];
-               $id = $returned_task[0]['id'];
-               $mark = $returned_task[0]['mark'];
-               $new_task = new Task($description, $mark, $id);
-               array_push($tasks, $new_task);
+           $brands = array();
+           foreach($returned_brands as $brand) {
+               $brandname = $brand['brand'];
+               $id = $brand['id'];
+               $new_brand = new Brand($brandname, $id);
+               array_push($brands, $new_brand);
            }
-           return $tasks;
+           return $brands;
         }
     }
 ?>

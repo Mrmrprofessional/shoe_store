@@ -69,8 +69,7 @@
         {
             //Arrange
             $name = "Work stuff";
-            $id = 1;
-            $test_store = new Store($name, $id);
+            $test_store = new Store($name);
             $test_store->save();
 
             //Act
@@ -178,72 +177,72 @@
             $this->assertEquals($test_store, $result);
         }
 
-        // function testAddBrand()
-        // {
-        //     //Arrange
-        //     $name = "Work stuff";
-        //     $id = 1;
-        //     $test_store = new Store($name, $id);
-        //     $test_store->save();
-        //
-        //     $description = "File reports";
-        //     $id2 = 2;
-        //     $test_brand = new Brand($description, $id2);
-        //     $test_brand->save();
-        //
-        //     //Act
-        //     $test_store->addBrand($test_brand);
-        //
-        //     //Assert
-        //     $this->assertEquals($test_store->getBrands(), [$test_brand]);
-        // }
-        //
-        // function testGetBrands()
-        // {
-        //     //Arrange
-        //     $name = "Work stuff";
-        //     $id = 1;
-        //     $test_store = new Store($name, $id);
-        //     $test_store->save();
-        //
-        //     $description = "Wash the dog";
-        //     $id2 = 2;
-        //     $test_brand = new Brand($description, $id2);
-        //     $test_brand->save();
-        //
-        //     $description2 = "Take out the trash";
-        //     $id3 = 3;
-        //     $test_brand2 = new Brand($description2, $id3);
-        //     $test_brand2->save();
-        //
-        //     //Act
-        //     $test_store->addBrand($test_brand);
-        //     $test_store->addBrand($test_brand2);
-        //
-        //     //Assert
-        //     $this->assertEquals($test_store->getBrands(), [$test_brand, $test_brand2]);
-        // }
-        //
-        // function testDelete()
-        // {
-        //     //Arrange
-        //     $name = "Work stuff";
-        //     $id = 1;
-        //     $test_store = new Store($name, $id);
-        //     $test_store->save();
-        //
-        //     $description = "File reports";
-        //     $id2 = 2;
-        //     $test_brand = new Brand($description, $id2);
-        //     $test_brand->save();
-        //
-        //     //Act
-        //     $test_store->addBrand($test_brand);
-        //     $test_store->delete();
-        //
-        //     //Assert
-        //     $this->assertEquals([], $test_brand->getCategories());
-        // }
+        function testAddBrand()
+        {
+            //Arrange
+            $name = "Work stuff";
+            $id = 1;
+            $test_store = new Store($name, $id);
+            $test_store->save();
+
+            $description = "File reports";
+            $id2 = 2;
+            $test_brand = new Brand($description, $id2);
+            $test_brand->save();
+
+            //Act
+            $test_store->addBrand($test_brand);
+
+            //Assert
+            $this->assertEquals($test_store->getBrands(), [$test_brand]);
+        }
+
+        function testGetBrands()
+        {
+            //Arrange
+            $name = "Work stuff";
+            $id = 1;
+            $test_store = new Store($name, $id);
+            $test_store->save();
+
+            $description = "Wash the dog";
+            $id2 = 2;
+            $test_brand = new Brand($description, $id2);
+            $test_brand->save();
+
+            $description2 = "Take out the trash";
+            $id3 = 3;
+            $test_brand2 = new Brand($description2, $id3);
+            $test_brand2->save();
+
+            //Act
+            $test_store->addBrand($test_brand);
+            $test_store->addBrand($test_brand2);
+
+            //Assert
+            $this->assertEquals($test_store->getBrands(), [$test_brand, $test_brand2]);
+        }
+
+        function testDelete()
+        {
+            //Arrange
+            $name = "Work stuff";
+            $id = 1;
+            $test_store = new Store($name, $id);
+            $test_store->save();
+
+            $description = "File reports";
+            $id2 = 2;
+            $test_brand = new Brand($description, $id2);
+            $test_brand->save();
+
+            //Act
+            $test_store->addBrand($test_brand);
+            $test_store->delete();
+
+            //Assert
+            $this->assertEquals([], $test_brand->getStores());
+        }
     }
 
 ?>

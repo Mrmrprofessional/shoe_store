@@ -1,36 +1,26 @@
 <?php
     class Brand
     {
-        private $description;
-        private $mark;
+        private $brand;
         private $id;
 
-        function __construct($description, $mark = false, $id = null)
+        function __construct($brand, $id = null)
         {
-            $this->description = $description;
-            $this->mark = $mark;
+            $this->brand = $brand;
             $this->id = $id;
         }
 
-        function setMark($new_mark)
+
+        function setBrand($new_brand)
         {
-            $this->mark = $new_mark;
+            $this->brand = (string) $new_brand;
         }
 
-        function setDescription($new_description)
+        function getBrand()
         {
-            $this->description = (string) $new_description;
+            return $this->brand;
         }
 
-        function getDescription()
-        {
-            return $this->description;
-        }
-
-        function getMark()
-        {
-            return $this->mark;
-        }
 
 
         function getId()
@@ -40,83 +30,63 @@
 
         function save()
         {
-              $GLOBALS['DB']->exec("INSERT INTO tasks (description, mark) VALUES ('{$this->getDescription()}', {$this->getMark()});");
+              $GLOBALS['DB']->exec("INSERT INTO brands (brand) VALUES ('{$this->getBrand()}');");
               $this->id = $GLOBALS['DB']->lastInsertId();
-        }
-
-        static function getAll()
-        {
-            $returned_tasks = $GLOBALS['DB']->query("SELECT * FROM tasks;");
-            $tasks = array();
-            foreach($returned_tasks as $task) {
-                $description = $task['description'];
-                $mark = $task['mark'];
-                $id = $task['id'];
-                $new_task = new Task($description, $mark, $id);
-                array_push($tasks, $new_task);
-            }
-            return $tasks;
         }
 
         static function deleteAll()
         {
-          $GLOBALS['DB']->exec("DELETE FROM tasks;");
+          $GLOBALS['DB']->exec("DELETE FROM brands;");
+        }
+
+
+        static function getAll()
+        {
+            $returned_brands = $GLOBALS['DB']->query("SELECT * FROM brands;");
+            $brands = array();
+            foreach($returned_brands as $brand) {
+                $brandname = $brand['brand'];
+                $id = $brand['id'];
+                $new_brand = new Brand($brandname,  $id);
+                array_push($brands, $new_brand);
+            }
+            return $brands;
         }
 
         static function find($search_id)
         {
-            $found_task = null;
-            $tasks = Task::getAll();
-            foreach($tasks as $task) {
-                $task_id = $task->getId();
-                if ($task_id == $search_id) {
-                  $found_task = $task;
+            $found_brand = null;
+            $brands = Brand::getAll();
+            foreach($brands as $brand) {
+                $brand_id = $brand->getId();
+                if ($brand_id == $search_id) {
+                  $found_brand = $brand;
                 }
             }
-            return $found_task;
+            return $found_brand;
         }
 
-        function update($new_description)
+
+        function addStore($store)
         {
-            $GLOBALS['DB']->exec("UPDATE tasks SET description = '{$new_description}' WHERE id = {$this->getId()};");
-            $this->setDescription($new_description);
+            $GLOBALS['DB']->exec("INSERT INTO brands_stores (store_id, brand_id) VALUES ({$store->getId()}, {$this->getId()});");
         }
 
-        function updateMark($new_mark)
+        function getStores()
         {
-            $GLOBALS['DB']->exec("UPDATE tasks SET mark = '{$new_mark}' WHERE id = {$this->getId()};");
-            $this->setMark($new_mark);
-        }
+           $returned_stores = $GLOBALS['DB']->query("SELECT stores.* FROM brands
+                JOIN brands_stores ON (brands.id = brands_stores.brand_id)
+                JOIN stores ON (brands_stores.store_id = stores.id)
+                WHERE brands.id = {$this->getId()};");
 
-        function delete()
-        {
-            $GLOBALS['DB']->exec("DELETE FROM tasks WHERE id = {$this->getId()};");
-            $GLOBALS['DB']->exec("DELETE FROM categories_tasks WHERE task_id = {$this->getId()};");
-        }
-
-        function addCategory($category)
-        {
-            $GLOBALS['DB']->exec("INSERT INTO categories_tasks (category_id, task_id) VALUES ({$category->getId()}, {$this->getId()});");
-        }
-
-        function getCategories()
-        {
-            $query = $GLOBALS['DB']->query("SELECT category_id FROM categories_tasks WHERE task_id = {$this->getId()};");
-            $category_ids = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            $categories = array();
-            foreach($category_ids as $id) {
-                $category_id = $id['category_id'];
-                $result = $GLOBALS['DB']->query("SELECT * FROM categories WHERE id = {$category_id};");
-                $returned_category = $result->fetchAll(PDO::FETCH_ASSOC);
-
-                $name = $returned_category[0]['name'];
-                $id = $returned_category[0]['id'];
-                $new_category = new Category($name, $id);
-                array_push($categories, $new_category);
-            }
-            return $categories;
-
+           $stores = array();
+           foreach($returned_stores as $store) {
+               $storename = $store['name'];
+               $id = $store['id'];
+               $new_store = new Store($storename, $id);
+               array_push($stores, $new_store);
+           }
+           return $stores;
         }
     }
 ?>

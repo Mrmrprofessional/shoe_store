@@ -52,38 +52,35 @@
         function testGetId()
         {
             //Arrange
-            $id = 1;
             $brand = "Wash the dog";
-            $test_store = new Brand($brand, $id);
+            $test_store = new Brand($brand);
 
             //Act
             $result = $test_store->getId();
 
             //Assert
-            $this->assertEquals(1, $result);
+            $this->assertEquals($test_store->getId(), $result);
         }
 
         function testSave()
         {
             //Arrange
             $brand = "Wash the dog";
-            $id = 1;
-            $test_store = new Brand($brand, $id);
+            $test_brand = new Brand($brand);
 
             //Act
-            $test_store->save();
+            $test_brand->save();
 
             //Assert
             $result = Brand::getAll();
-            $this->assertEquals($test_store, $result[0]);
+            $this->assertEquals($test_brand, $result[0]);
         }
 
         function testSaveSetsId()
         {
             //Arrange
             $brand = "Wash the dog";
-            $id = 1;
-            $test_store = new Brand($brand, $id);
+            $test_store = new Brand($brand);
 
             //Act
             $test_store->save();
@@ -96,14 +93,12 @@
         {
             //Arrange
             $brand = "Wash the dog";
-            $id = 1;
-            $test_store = new Brand($brand, $id);
+            $test_store = new Brand($brand);
             $test_store->save();
 
 
             $brand2 = "Water the lawn";
-            $id2 = 2;
-            $test_store2 = new Brand($brand2, $id2);
+            $test_store2 = new Brand($brand2);
             $test_store2->save();
 
             //Act
@@ -117,13 +112,11 @@
         {
             //Arrange
             $brand = "Wash the dog";
-            $id = 1;
-            $test_store = new Brand($brand, $id);
+            $test_store = new Brand($brand);
             $test_store->save();
 
             $brand2 = "Water the lawn";
-            $id2 = 2;
-            $test_store2 = new Brand($brand2, $id2);
+            $test_store2 = new Brand($brand2);
             $test_store2->save();
 
             //Act
@@ -138,13 +131,11 @@
         {
             //Arrange
             $brand = "Wash the dog";
-            $id = 1;
-            $test_store = new Brand($brand, $id);
+            $test_store = new Brand($brand);
             $test_store->save();
 
             $brand2 = "Water the lawn";
-            $id2 = 2;
-            $test_store2 = new Brand($brand2, $id2);
+            $test_store2 = new Brand($brand2);
             $test_store2->save();
 
             //Act
@@ -159,46 +150,41 @@
         {
             //Arrange
             $name = "Work stuff";
-            $id = 1;
-            $test_store = new Store($name, $id);
+            $test_store = new Store($name);
             $test_store->save();
 
             $brand = "File reports";
-            $id2 = 2;
-            $test_store = new Brand($brand, $id2);
-            $test_store->save();
+            $test_brand = new Brand($brand);
+            $test_brand->save();
 
             //Act
-            $test_store->addStore($test_store);
+            $test_brand->addStore($test_store);
 
             //Assert
-            $this->assertEquals($test_store->getStores(), [$test_store]);
+            $this->assertEquals($test_brand->getStores(), [$test_store]);
         }
 
         function testGetStores()
         {
             //Arrange
             $name = "Work stuff";
-            $id = 1;
-            $test_store = new Store($name, $id);
+            $test_store = new Store($name);
             $test_store->save();
 
             $name2 = "Volunteer stuff";
-            $id2 = 2;
-            $test_store2 = new Store($name2, $id2);
+            $test_store2 = new Store($name2);
             $test_store2->save();
 
             $brand = "File reports";
-            $id3 = 3;
-            $test_store = new Brand($brand, $id3);
-            $test_store->save();
+            $test_brand = new Brand($brand);
+            $test_brand->save();
 
             //Act
-            $test_store->addStore($test_store);
-            $test_store->addStore($test_store2);
+            $test_brand->addStore($test_store);
+            $test_brand->addStore($test_store2);
 
             //Assert
-            $this->assertEquals($test_store->getStores(), [$test_store, $test_store2]);
+            $this->assertEquals($test_brand->getStores(), [$test_store, $test_store2]);
         }
 
     }
