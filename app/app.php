@@ -58,12 +58,10 @@
         return $app['twig']->render('stores.html.twig', array('stores' => Store::getAll()));
     });
 
-    $app->get("/categories/{id}", function($id) use ($app) {
-        $category = Category::find($id);
-        $tasks = $category->getTasks();
-        var_dump($tasks[0]);
-        var_dump($tasks[1]);
-        return $app['twig']->render('category.html.twig', array('category' => $category, 'tasks' => $category->getTasks(), 'all_tasks' => Task::getAll()));
+    $app->get("/store/{id}", function($id) use ($app) {
+        $store = Store::find($id);
+        $brands = $store->getBrands();
+        return $app['twig']->render('store.html.twig', array('store' => $store, 'brands' => $brands, 'all_brands' => Brand::getAll()));
     });
 
     $app->post("/add_store", function() use ($app) {
@@ -73,23 +71,27 @@
         return $app['twig']->render('brand.html.twig', array('brand' => $brand, 'stores' => $brand->getStores(), 'all_stores' => Store::getAll()));
     });
 
-    $app->post("/add_categories", function() use ($app) {
-        $category = Category::find($_POST['category_id']);
-        $task = Task::find($_POST['task_id']);
-        $task->addCategory($category);
-        return $app['twig']->render('task.html.twig', array('task' => $task, 'tasks' => Task::getAll(), 'categories' => $task->getCategories(), 'all_categories' => Category::getAll()));
+    $app->post("/add_brand", function() use ($app) {
+        $brand = Brand::find($_POST['brand_id']);
+        $store = Store::find($_POST['store_id']);
+        $store->addBrand($brand);
+        return $app['twig']->render('store.html.twig', array('store' => $store, 'brands' => $store->getBrands(), 'all_brands' => Brand::getAll()));
     });
 
 
-    $app->patch("/task_update", function() use ($app) {
-        $mark = $_POST['mark'];
-        $task_id = $_POST['task_id'];
-        var_dump($mark);
-        $task = Task::find($task_id);
-        $task->updateMark($mark);
-        $category = Category::find($_POST['category_id']);
-        return $app['twig']->render('category.html.twig', array('category' => $category, 'tasks' => $category->getTasks()));
+    $app->post("/delete_store", function() use ($app){
+        $store = Store::find($_POST['store_id']);
+        $store->delete();
+        return $app['twig']->render('stores.html.twig', array('stores' => Store::getAll()));
     });
+
+    $app->patch("/update_store", function() use ($app) {
+        $store = Store::find($_POST['store_id']);
+        $store->update($_POST['name']);
+        $brands = $store->getBrands();
+        return $app['twig']->render('store.html.twig', array('store' => $store, 'brands' => $brands, 'all_brands' => Brand::getAll()));
+        });
+
 
     return $app;
 
