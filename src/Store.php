@@ -27,45 +27,45 @@
 
         function save()
         {
-              $GLOBALS['DB']->exec("INSERT INTO categories (name) VALUES ('{$this->getName()}');");
+              $GLOBALS['DB']->exec("INSERT INTO stores (name) VALUES ('{$this->getName()}');");
               $this->id = $GLOBALS['DB']->lastInsertId();
         }
 
         function update($new_name)
         {
-            $GLOBALS['DB']->exec("UPDATE categories SET name = '{$new_name}' WHERE id = {$this->getId()};");
+            $GLOBALS['DB']->exec("UPDATE stores SET name = '{$new_name}' WHERE id = {$this->getId()};");
             $this->setName($new_name);
         }
 
         function delete()
         {
-            $GLOBALS['DB']->exec("DELETE FROM categories WHERE id = {$this->getId()};");
-            $GLOBALS['DB']->exec("DELETE FROM categories_tasks WHERE store_id = {$this->getId()};");
+            $GLOBALS['DB']->exec("DELETE FROM stores WHERE id = {$this->getId()};");
+            $GLOBALS['DB']->exec("DELETE FROM stores_tasks WHERE store_id = {$this->getId()};");
         }
 
         static function getAll()
         {
-            $returned_categories = $GLOBALS['DB']->query("SELECT * FROM categories;");
-            $categories = array();
-            foreach($returned_categories as $store) {
+            $returned_stores = $GLOBALS['DB']->query("SELECT * FROM stores;");
+            $stores = array();
+            foreach($returned_stores as $store) {
                 $name = $store['name'];
                 $id = $store['id'];
                 $new_store = new Store($name, $id);
-                array_push($categories, $new_store);
+                array_push($stores, $new_store);
             }
-            return $categories;
+            return $stores;
         }
 
         static function deleteAll()
         {
-          $GLOBALS['DB']->exec("DELETE FROM categories;");
+          $GLOBALS['DB']->exec("DELETE FROM stores;");
         }
 
         static function find($search_id)
         {
             $found_store = null;
-            $categories = Store::getAll();
-            foreach($categories as $store) {
+            $stores = Store::getAll();
+            foreach($stores as $store) {
                 $store_id = $store->getId();
                 if ($store_id == $search_id) {
                   $found_store = $store;
@@ -76,12 +76,12 @@
 
         function addTask($task)
         {
-            $GLOBALS['DB']->exec("INSERT INTO categories_tasks (store_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
+            $GLOBALS['DB']->exec("INSERT INTO stores_tasks (store_id, task_id) VALUES ({$this->getId()}, {$task->getId()});");
         }
 
         function getTasks()
         {
-           $query = $GLOBALS['DB']->query("SELECT task_id FROM categories_tasks WHERE store_id = {$this->getId()};");
+           $query = $GLOBALS['DB']->query("SELECT task_id FROM stores_tasks WHERE store_id = {$this->getId()};");
            $task_ids = $query->fetchAll(PDO::FETCH_ASSOC);
 
            $tasks = array();
